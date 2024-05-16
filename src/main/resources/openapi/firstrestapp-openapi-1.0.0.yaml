@@ -1,0 +1,255 @@
+openapi: 3.0.3
+info:
+  title: First REST API
+  description: First REST API
+  version: 1.0.0
+servers:
+  - url: 'https://localhost:8080/'
+tags:
+  - name: user
+    description: работа с пользователями
+  - name: task
+    description: работа с задачами
+paths:
+  /user:
+    get:
+      tags:
+        - user
+      summary: получить список всех пользователей
+      responses:
+        "200":
+          description: Пользователь успешно получен
+          content:
+            application/json:
+              schema:
+                type:
+                  array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - user
+      summary: добавить пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "200":
+          description: пользователь добавлен успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /user/{userId}:
+    get:
+      tags:
+        - user
+      summary: получить пользователя по идентификатору
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "идентификатор пользователя"
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: пользователь найден успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: пользователь не найден
+    put:
+      tags:
+        - user
+      summary: модифицировать данные пользователя по id
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "идентификатор пользователя"
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "200":
+          description: пользователь модифицирован успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: пользователь не найден
+    delete:
+      tags:
+        - user
+      summary: удалить пользователя по идентификатору
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "идентификатор пользователя"
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: пользователь удален успешно
+
+  /task:
+    get:
+      tags:
+        - task
+      summary: получить список всех задач
+      responses:
+        "200":
+          description: список задач успешно получен
+          content:
+            application/json:
+              schema:
+                type:
+                  array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      tags:
+        - task
+      summary: добавить задачу
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      responses:
+        "200":
+          description: задача создана успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+
+  /task/{taskId}:
+    get:
+      tags:
+        - task
+      summary: получить задачу по идентификатору
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: "идентификатор задачи"
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: задача найдена успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        "404":
+          description: задача не найдена
+    put:
+      tags:
+        - task
+      summary: модифицировать задачу по идентификатору
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: "идентификатор задачи"
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      responses:
+        "200":
+          description: задача модифицирована успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        "404":
+          description: задача не найдена
+    delete:
+      tags:
+        - task
+      summary: удалить задачу по идентификатору
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: "идентификатор задачи"
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: задача удалена успешно
+
+components:
+  schemas:
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id пользователя
+          format: int64
+        name:
+          type: string
+          description: имя пользователя
+        surname:
+          type: string
+          description: фамилия пользователя
+        mail:
+          type: string
+          description: email пользователя
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: id задачи
+        name:
+          type: string
+          description: название задачи
+        description:
+          type: string
+          description: описание задачи
+        creationDate:
+          type: string
+          format: date
+          description: дата создания
+        deadLine:
+          type: string
+          format: date
+          description: дата завершения
