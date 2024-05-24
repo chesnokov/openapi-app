@@ -1,0 +1,265 @@
+openapi: 3.0.3
+info:
+  title: First REST API
+  description: First REST API
+  version: 1.0.0
+servers:
+  - url: 'https://localhost:8080/'
+tags:
+  - name: user
+    description: работа с пользователями
+  - name: task
+    description: работа с задачами
+paths:
+  /user:
+    get:
+      operationId: getAllUsers
+      tags:
+        - user
+      summary: получить список всех пользователей
+      responses:
+        "200":
+          description: Пользователь успешно получен
+          content:
+            application/json:
+              schema:
+                type:
+                  array
+                items:
+                  $ref: '#/components/schemas/RestUser'
+    post:
+      operationId: addUser
+      tags:
+        - user
+      summary: добавить пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestUser'
+        required: true
+      responses:
+        "200":
+          description: пользователь добавлен успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestUser'
+
+  /user/{userId}:
+    get:
+      operationId: getUserById
+      tags:
+        - user
+      summary: получить пользователя по идентификатору
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "идентификатор пользователя"
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: пользователь найден успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestUser'
+        "404":
+          description: пользователь не найден
+    put:
+      operationId: updateUser
+      tags:
+        - user
+      summary: модифицировать данные пользователя по id
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "идентификатор пользователя"
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestUser'
+        required: true
+      responses:
+        "200":
+          description: пользователь модифицирован успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestUser'
+        "404":
+          description: пользователь не найден
+    delete:
+      operationId: deleteUser
+      tags:
+        - user
+      summary: удалить пользователя по идентификатору
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "идентификатор пользователя"
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: пользователь удален успешно
+
+  /task:
+    get:
+      operationId: getAllTasks
+      tags:
+        - task
+      summary: получить список всех задач
+      responses:
+        "200":
+          description: список задач успешно получен
+          content:
+            application/json:
+              schema:
+                type:
+                  array
+                items:
+                  $ref: '#/components/schemas/RestTask'
+    post:
+      operationId: addTask
+      tags:
+        - task
+      summary: добавить задачу
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestTask'
+        required: true
+      responses:
+        "200":
+          description: задача создана успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestTask'
+
+
+  /task/{taskId}:
+    get:
+      operationId: getTaskById
+      tags:
+        - task
+      summary: получить задачу по идентификатору
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: "идентификатор задачи"
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: задача найдена успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestTask'
+        "404":
+          description: задача не найдена
+    put:
+      operationId: updateTask
+      tags:
+        - task
+      summary: модифицировать задачу по идентификатору
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: "идентификатор задачи"
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestTask'
+        required: true
+      responses:
+        "200":
+          description: задача модифицирована успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestTask'
+        "404":
+          description: задача не найдена
+    delete:
+      operationId: deleteTask
+      tags:
+        - task
+      summary: удалить задачу по идентификатору
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: "идентификатор задачи"
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: задача удалена успешно
+
+components:
+  schemas:
+
+    RestUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id пользователя
+          format: int64
+        name:
+          type: string
+          description: имя пользователя
+        surname:
+          type: string
+          description: фамилия пользователя
+        mail:
+          type: string
+          description: email пользователя
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/RestTask'
+
+    RestTask:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: id задачи
+        name:
+          type: string
+          description: название задачи
+        description:
+          type: string
+          description: описание задачи
+        creationDate:
+          type: string
+          format: date
+          description: дата создания
+        deadLine:
+          type: string
+          format: date
+          description: дата завершения
